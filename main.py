@@ -9,6 +9,7 @@ from market_scanner import analyze_exchange_markets
 from data_fetcher import fetch_full_ohlcv, ohlcv_to_dataframe
 from analysis_engine import calculate_indicators, analyze_trends_and_generate_suggestions, generate_final_report
 from reporting import generate_chart
+from advanced_report_generator import generate_comprehensive_reports
 import pandas as pd
 
 def main():
@@ -45,8 +46,6 @@ def main():
     print("\n-------------------------------------------\n")
 
     # --- 3. Deep Dive Analysis on a Selected Exchange/Symbol ---
-    # For this automated script, we will use the first exchange from the config
-    # A more interactive version could prompt the user for input here.
     target_exchange_id = target_exchanges[0]
     exchange = manager.get_exchange(target_exchange_id)
 
@@ -66,13 +65,31 @@ def main():
     df_with_indicators = calculate_indicators(df.copy(), short_ma, long_ma)
     suggestions = analyze_trends_and_generate_suggestions(df_with_indicators)
 
-    # --- 6. Reporting ---
+    # --- 6. Console Reporting ---
     text_report = generate_final_report(suggestions, symbol_to_analyze)
     print(text_report)
 
-    # Generate the visual chart (using a slice of the last N days for better visibility)
-    display_df = df_with_indicators.tail(365) # Display last year of data
+    # Generate the visual chart
+    display_df = df_with_indicators.tail(365)
     generate_chart(display_df, symbol_to_analyze, short_ma, long_ma)
+    
+    # --- 7. Generate Comprehensive Reports (PowerPoint + Word) ---
+    chart_path = f'{symbol_to_analyze.replace("/", "-")}_chart.png'
+    signal_data = generate_comprehensive_reports(
+        results_df,
+        symbol_to_analyze,
+        df_with_indicators,
+        suggestions,
+        chart_path
+    )
+    
+    print(f"\n{'='*60}")
+    print(f"✅ REPORTS GENERATED SUCCESSFULLY!")
+    print(f"{'='*60}")
+    print(f"PowerPoint: /mnt/user-data/outputs/Crypto_Market_Analysis.pptx")
+    print(f"Word Doc:   /mnt/user-data/outputs/Crypto_Market_Analysis.docx")
+    print(f"\nTrading Signal: {signal_data['signal']} (Confidence: {signal_data['confidence']})")
+    print(f"{'='*60}\n")
 
 if __name__ == '__main__':
     main()
