@@ -1,0 +1,6 @@
+ccxt
+pandas
+pandas-ta
+mplfinance
+numpy<=2.2
+pandas
