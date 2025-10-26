@@ -1,6 +1,4 @@
-"""
-Base Report Generator - Abstract base class for report generation.
-"""
+"""Base Report Generator - Abstract base class for report generation."""
 import os
 import logging
 from abc import ABC, abstractmethod
@@ -12,12 +10,6 @@ class ReportGenerator(ABC):
     """Abstract base class for all report generators."""
 
     def __init__(self, output_dir: str):
-        """
-        Initialize report generator.
-
-        Args:
-            output_dir: Directory to save reports
-        """
         self.output_dir = output_dir
         self._ensure_output_dir()
 
@@ -30,29 +22,14 @@ class ReportGenerator(ABC):
             raise
 
     @abstractmethod
-    def generate_node(
+    def generate(
         self,
         symbol: str,
         signal_data: Dict,
         exchange_results: pd.DataFrame,
         suggestions: List[str],
         df: Optional[pd.DataFrame],
-        chart_path: Optional[str],
-        date_prefix: str
+        chart_path: Optional[str]
     ) -> bool:
-        """
-        Generate a report.
-
-        Args:
-            symbol: Trading symbol
-            signal_data: Trading signal information
-            exchange_results: Exchange comparison data
-            suggestions: Analysis suggestions
-            df: DataFrame with indicators (can be None)
-            chart_path: Path to chart image (can be None)
-            date_prefix: Date prefix for filename
-
-        Returns:
-            True if successful, False otherwise
-        """
+        """Generate a report."""
         pass

@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
-"""
-Crypto Trading Bot - Main Entry Point
-Analyzes cryptocurrency markets and generates comprehensive reports.
-"""
+"""Crypto Trading Bot - Main Entry Point"""
 import configparser
 import logging
 import sys
 import os
 
-# Add crypto_bot to path
 sys.path.insert(0, os.path.dirname(__file__))
 
 from crypto_bot import CryptoAnalyzer
@@ -19,9 +15,7 @@ def setup_logging():
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s - %(levelname)s - %(message)s',
-        handlers=[
-            logging.StreamHandler(sys.stdout)
-        ]
+        handlers=[logging.StreamHandler(sys.stdout)]
     )
 
 
@@ -30,11 +24,10 @@ def load_config():
     config = configparser.ConfigParser()
 
     if not config.read('config.ini'):
-        logging.error("Failed to read config.ini. Make sure the file exists.")
+        logging.error("Failed to read config.ini")
         sys.exit(1)
 
     try:
-        # Parse configuration
         target_exchanges = [
             e.strip() for e in config.get('exchanges', 'target_exchanges', fallback='').split(',')
             if e.strip()
@@ -58,11 +51,11 @@ def load_config():
             'history_days': history_days,
             'short_ma': short_ma,
             'long_ma': long_ma,
-            'output_dir': output_dir
+            'output_base_dir': output_dir
         }
 
-    except (configparser.NoSectionError, configparser.NoOptionError, ValueError) as e:
-        logging.error(f"Configuration error in config.ini: {e}")
+    except Exception as e:
+        logging.error(f"Configuration error: {e}")
         sys.exit(1)
 
 
@@ -74,16 +67,10 @@ def main():
     print("  CRYPTOCURRENCY TRADING BOT - MARKET ANALYSIS TOOL")
     print("=" * 70 + "\n")
 
-    # Load configuration
     config = load_config()
-
-    # Create analyzer
     analyzer = CryptoAnalyzer(**config)
-
-    # Run analysis
     success = analyzer.run()
 
-    # Exit with appropriate code
     sys.exit(0 if success else 1)
 
 

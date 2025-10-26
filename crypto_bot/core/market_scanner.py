@@ -1,8 +1,6 @@
-"""
-Market Scanner - Analyzes exchange markets and gathers metrics.
-"""
+"""Market Scanner - Analyzes exchange markets and gathers metrics."""
 import logging
-from typing import Dict, List
+from typing import Dict
 import pandas as pd
 
 
@@ -11,16 +9,7 @@ class MarketScanner:
     
     @staticmethod
     def analyze_exchange(exchange_id: str, exchange_instance) -> Dict:
-        """
-        Analyze an exchange's markets to gather key metrics.
-        
-        Args:
-            exchange_id: Exchange identifier
-            exchange_instance: ccxt exchange object
-            
-        Returns:
-            Dictionary containing analysis results
-        """
+        """Analyze an exchange's markets to gather key metrics."""
         results = {
             'name': exchange_id,
             'total_spot_pairs': 0,
@@ -30,21 +19,17 @@ class MarketScanner:
         }
         
         try:
-            # Load markets
             markets = exchange_instance.load_markets()
             
-            # Filter for active spot markets
             spot_markets = {
                 k: v for k, v in markets.items() 
                 if v.get('spot', False) and v.get('active', True)
             }
             results['total_spot_pairs'] = len(spot_markets)
             
-            # Count USDT pairs
             usdt_pairs = [m for m in spot_markets.values() if m['quote'] == 'USDT']
             results['usdt_quoted_pairs'] = len(usdt_pairs)
             
-            # Check OHLCV capability
             if exchange_instance.has.get('fetchOHLCV'):
                 results['supports_fetchOHLCV'] = True
                 
@@ -55,15 +40,7 @@ class MarketScanner:
     
     @staticmethod
     def scan_all_exchanges(exchanges: Dict) -> pd.DataFrame:
-        """
-        Scan all exchanges and return results as DataFrame.
-        
-        Args:
-            exchanges: Dictionary of exchange instances
-            
-        Returns:
-            DataFrame with exchange analysis results
-        """
+        """Scan all exchanges and return results as DataFrame."""
         results = []
         
         for exchange_id, exchange_instance in exchanges.items():
