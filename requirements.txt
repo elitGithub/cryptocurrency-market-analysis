@@ -1,5 +1,6 @@
-ccxt
-pandas
-pandas-ta
-mplfinance
-numpy<=2.2
+ccxt>=4.0.0
+pandas>=2.0.0
+pandas-ta>=0.3.14b
+mplfinance>=0.12.10b0
+numpy<2.0
+matplotlib>=3.7.0
